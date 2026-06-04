@@ -13,7 +13,9 @@ public class Usuario {
 		this.senha = senha;
 	}
 	
-	public boolean login
+	public boolean login(String email, String senha) {
+		return this.email.equals(email) && this.senha.equals(senha);
+	}
 
 	public int getId() {
 		return id;
