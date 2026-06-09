@@ -1,7 +1,6 @@
 package model;
 
-import java.time.LocalDate;
-
+import java.sql.Date;
 import enums.TipoTransacao;
 
 public abstract class Transacao {
@@ -9,13 +8,13 @@ public abstract class Transacao {
 	protected int id;
 	protected String descricao;
 	protected double valor;
-	protected LocalDate data;
+	protected Date data;
 	protected TipoTransacao tipoTransacao;
 	protected Usuario usuario;
 	protected Conta conta;
 	protected Categoria categoria;
 
-	public Transacao(int id, String descricao, double valor, LocalDate data, TipoTransacao tipoTransacao, Usuario usuario,
+	public Transacao(int id, String descricao, double valor, Date data, TipoTransacao tipoTransacao, Usuario usuario,
 			Conta conta, Categoria categoria) {
 		this.id = id;
 		this.descricao = descricao;
@@ -51,11 +50,11 @@ public abstract class Transacao {
 		this.valor = valor;
 	}
 
-	public LocalDate getData() {
+	public Date getData() {
 		return data;
 	}
 
-	public void setData(LocalDate data) {
+	public void setData(Date data) {
 		this.data = data;
 	}
 
