@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 import enums.StatusPagamento;
 import enums.TipoTransacao;
@@ -9,8 +9,14 @@ public class Despesa extends Transacao {
 
 	private StatusPagamento statusPagamento;
 
-	public Despesa(int id, String descricao, double valor, LocalDate data, Usuario usuario, Conta conta,
-			Categoria categoria, StatusPagamento statusPagamento) {
+	public Despesa(int id, 
+			String descricao, 
+			double valor, 
+			Date data, 
+			Usuario usuario, 
+			Conta conta,
+			Categoria categoria, 
+			StatusPagamento statusPagamento) {
 
 		super(id, descricao, valor, data, TipoTransacao.DESPESA, usuario, conta, categoria);
 

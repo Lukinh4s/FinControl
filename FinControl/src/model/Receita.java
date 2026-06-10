@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 import enums.TipoTransacao;
 
@@ -8,9 +8,24 @@ public class Receita extends Transacao {
 
 	private String fonte;
 
-	public Receita(int id, String descricao, double valor, LocalDate data, Usuario usuario, Conta conta,
-			Categoria categoria, String fonte) {
-		super(id, descricao, valor, data, TipoTransacao.RECEITA, usuario, conta, categoria);
+	public Receita(
+			int id, 
+			String descricao, 
+			double valor, 
+			Date data, 
+			Usuario usuario, 
+			Conta conta,
+			Categoria categoria, 
+			String fonte){
+		
+		super(id, 
+				descricao, 
+				valor, 
+				data, 
+				TipoTransacao.RECEITA, 
+				usuario, 
+				conta, 
+				categoria);
 		this.setFonte(fonte);
 	}
 
