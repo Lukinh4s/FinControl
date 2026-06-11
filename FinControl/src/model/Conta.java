@@ -67,4 +67,9 @@ public class Conta {
 	public void setTipoConta(TipoConta tipoConta) {
 		this.tipoConta = tipoConta;
 	}
+	
+	@Override
+	public String toString() {
+	    return nome;
+	}
 }

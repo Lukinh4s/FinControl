@@ -38,11 +38,28 @@ public class TelaCategoria extends JFrame {
         JButton btnSalvar = new JButton("Cadastrar");
         btnSalvar.setBounds(280, 20, 120, 25);
         add(btnSalvar);
+        
+        JButton btnExcluir = new JButton("Exluir");
+        btnExcluir.setBounds(420, 20, 120, 25);
+        add(btnExcluir);
 
         tabela = new JTable();
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBounds(20, 80, 540, 240);
         add(scroll);
+        
+        btnExcluir.addActionListener(e -> {
+			int linha = tabela.getSelectedRow();
+
+			if (linha == -1) {
+				JOptionPane.showMessageDialog(null, "Selecione uma categoria na tabela.");
+				return;
+			}
+
+			int idCategoria = Integer.parseInt(tabela.getValueAt(linha, 0).toString());
+
+			excluirCategoria(idCategoria);
+		});
 
         btnSalvar.addActionListener(e -> cadastrar());
 
@@ -75,14 +92,51 @@ public class TelaCategoria extends JFrame {
         modelo.addColumn("ID");
         modelo.addColumn("Nome");
 
-        for (Categoria categoria : categorias) {
+        if (categorias != null) {
 
-            modelo.addRow(new Object[] {
-                    categoria.getId(),
-                    categoria.getNome()
-            });
+            for (Categoria categoria : categorias) {
+
+                modelo.addRow(new Object[] {
+                        categoria.getId(),
+                        categoria.getNome()
+                });
+            }
         }
 
         tabela.setModel(modelo);
+    }
+    
+    private void excluirCategoria(int idCategoria) {
+
+        int opcao = JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente excluir esta categoria?",
+                "Confirmação",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcao == JOptionPane.YES_OPTION) {
+
+            boolean sucesso =
+                    controller.excluir(idCategoria);
+
+            if (sucesso) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Categoria excluída com sucesso!"
+                );
+
+                carregarCategorias();
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Erro ao excluir categoria."
+                );
+            }
+        }
     }
 }
