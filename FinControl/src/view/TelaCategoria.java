@@ -25,28 +25,32 @@ public class TelaCategoria extends JFrame {
         setTitle("Categorias");
         setSize(600, 400);
         setLocationRelativeTo(null);
-        setLayout(null);
+        getContentPane().setLayout(null);
 
         JLabel lblNome = new JLabel("Nome:");
         lblNome.setBounds(20, 20, 50, 25);
-        add(lblNome);
+        getContentPane().add(lblNome);
 
         txtNome = new JTextField();
         txtNome.setBounds(80, 20, 180, 25);
-        add(txtNome);
+        getContentPane().add(txtNome);
 
         JButton btnSalvar = new JButton("Cadastrar");
         btnSalvar.setBounds(280, 20, 120, 25);
-        add(btnSalvar);
+        getContentPane().add(btnSalvar);
         
+        JButton btnEditar = new JButton("Editar");
+        btnEditar.setBounds(410, 20, 120, 25);
+        getContentPane().add(btnEditar);
+
         JButton btnExcluir = new JButton("Exluir");
-        btnExcluir.setBounds(420, 20, 120, 25);
-        add(btnExcluir);
+        btnExcluir.setBounds(410, 50, 120, 25);
+        getContentPane().add(btnExcluir);
 
         tabela = new JTable();
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBounds(20, 80, 540, 240);
-        add(scroll);
+        getContentPane().add(scroll);
         
         btnExcluir.addActionListener(e -> {
 			int linha = tabela.getSelectedRow();
@@ -62,7 +66,16 @@ public class TelaCategoria extends JFrame {
 		});
 
         btnSalvar.addActionListener(e -> cadastrar());
+        btnEditar.addActionListener(e -> editarCategoria());
+        tabela.getSelectionModel().addListSelectionListener(e -> {
 
+            int linha = tabela.getSelectedRow();
+
+            if (linha != -1) {
+                txtNome.setText(tabela.getValueAt(linha, 1).toString());
+            }
+        });
+        
         carregarCategorias();
     }
 
@@ -137,6 +150,30 @@ public class TelaCategoria extends JFrame {
                         "Erro ao excluir categoria."
                 );
             }
+        }
+    }
+    
+    private void editarCategoria() {
+
+        int linha = tabela.getSelectedRow();
+
+        if (linha == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione uma categoria.");
+            return;
+        }
+
+        int id = Integer.parseInt(tabela.getValueAt(linha, 0).toString());
+
+        Categoria categoria = new Categoria(id, txtNome.getText());
+
+        boolean sucesso = controller.atualizar(categoria);
+
+        if (sucesso) {
+            JOptionPane.showMessageDialog(this, "Categoria atualizada!");
+            txtNome.setText("");
+            carregarCategorias();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar categoria.");
         }
     }
 }

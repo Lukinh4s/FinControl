@@ -66,8 +66,14 @@ public class TelaConta extends JFrame {
 		getContentPane().add(btnAtualizarLista);
 
 		btnExcluir = new JButton("Excluir");
-		btnExcluir.setBounds(380, 150, 100, 30);
+		btnExcluir.setBounds(490, 150, 100, 30);
 		getContentPane().add(btnExcluir);
+		
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.setBounds(380, 150, 100, 30);
+		getContentPane().add(btnEditar);
+
+		btnEditar.addActionListener(e -> editarConta());
 
 		btnExcluir.addActionListener(e -> {
 			int linha = tabelaContas.getSelectedRow();
@@ -81,7 +87,7 @@ public class TelaConta extends JFrame {
 
 			excluirConta(idConta);
 		});
-
+		
 		tabelaContas = new JTable();
 
 		JScrollPane scroll = new JScrollPane(tabelaContas);
@@ -90,7 +96,17 @@ public class TelaConta extends JFrame {
 
 		btnSalvar.addActionListener(e -> cadastrarConta());
 		btnAtualizarLista.addActionListener(e -> carregarContas());
+		tabelaContas.getSelectionModel().addListSelectionListener(e -> {
 
+		    int linha = tabelaContas.getSelectedRow();
+
+		    if (linha != -1) {
+		        txtNome.setText(tabelaContas.getValueAt(linha, 1).toString());
+		        txtSaldo.setText(tabelaContas.getValueAt(linha, 2).toString());
+		        cbTipoConta.setSelectedItem(TipoConta.valueOf(tabelaContas.getValueAt(linha, 3).toString()));
+		    }
+		});
+		
 		carregarContas();
 	}
 
@@ -161,5 +177,36 @@ public class TelaConta extends JFrame {
 				JOptionPane.showMessageDialog(this, "Erro ao excluir conta.");
 			}
 		}
+	}
+	
+	private void editarConta() {
+
+	    int linha = tabelaContas.getSelectedRow();
+
+	    if (linha == -1) {
+	        JOptionPane.showMessageDialog(this, "Selecione uma conta na tabela.");
+	        return;
+	    }
+
+	    try {
+	        int id = Integer.parseInt(tabelaContas.getValueAt(linha, 0).toString());
+	        String nome = txtNome.getText();
+	        double saldo = Double.parseDouble(txtSaldo.getText());
+	        TipoConta tipoConta = (TipoConta) cbTipoConta.getSelectedItem();
+
+	        Conta conta = new Conta(id, nome, saldo, tipoConta);
+
+	        boolean sucesso = contaController.atualizar(conta);
+
+	        if (sucesso) {
+	            JOptionPane.showMessageDialog(this, "Conta atualizada com sucesso!");
+	            carregarContas();
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Erro ao atualizar conta.");
+	        }
+
+	    } catch (NumberFormatException erro) {
+	        JOptionPane.showMessageDialog(this, "Digite um saldo válido.");
+	    }
 	}
 }

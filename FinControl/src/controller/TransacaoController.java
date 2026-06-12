@@ -255,4 +255,54 @@ public class TransacaoController {
 	    return total;
 	}
 	
+	public boolean atualizarComSaldo(Transacao novaTransacao) {
+
+	    if (novaTransacao == null || novaTransacao.getId() <= 0) {
+	        return false;
+	    }
+
+	    Transacao transacaoAntiga = transacaoDAO.buscarPorId(novaTransacao.getId());
+
+	    if (transacaoAntiga == null) {
+	        return false;
+	    }
+
+	    Conta contaAntiga = contaDAO.buscarPorId(transacaoAntiga.getConta().getId());
+	    Conta contaNova = contaDAO.buscarPorId(novaTransacao.getConta().getId());
+
+	    if (contaAntiga == null || contaNova == null) {
+	        return false;
+	    }
+
+	    try {
+	        if (transacaoAntiga instanceof Receita) {
+	            contaAntiga.removerSaldo(transacaoAntiga.getValor());
+	        } else if (transacaoAntiga instanceof Despesa) {
+	            contaAntiga.adicionarSaldo(transacaoAntiga.getValor());
+	        }
+
+	        if (novaTransacao instanceof Receita) {
+	            contaNova.adicionarSaldo(novaTransacao.getValor());
+	        } else if (novaTransacao instanceof Despesa) {
+	            contaNova.removerSaldo(novaTransacao.getValor());
+	        }
+
+	    } catch (IllegalArgumentException erro) {
+	        System.out.println(erro.getMessage());
+	        return false;
+	    }
+
+	    boolean atualizou = transacaoDAO.atualizar(novaTransacao);
+
+	    if (atualizou) {
+	        contaDAO.atualizarSaldo(contaAntiga);
+
+	        if (contaAntiga.getId() != contaNova.getId()) {
+	            contaDAO.atualizarSaldo(contaNova);
+	        }
+	    }
+
+	    return atualizou;
+	}
+	
 }
